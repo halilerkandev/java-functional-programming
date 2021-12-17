@@ -3,6 +3,7 @@ package streams;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
@@ -19,19 +20,40 @@ public class _Stream {
                 new Person("Bob", PREFER_NOT_TO_SAY)
         );
 
-        people.stream()
-                .map(person -> person.gender)
-                .collect(Collectors.toSet())
-                .forEach(System.out::println);
+//        people.stream()
+//                .map(person -> person.gender)
+//                .collect(Collectors.toSet())
+//                .forEach(System.out::println);
+//
+//        Function<Person, String> getPersonName = person -> person.name;
+//        ToIntFunction<String> getNameLength = String::length;
+//        IntConsumer printLength = System.out::println;
+//
+//        people.stream()
+//                .map(getPersonName)
+//                .mapToInt(getNameLength)
+//                .forEach(printLength);
 
-        Function<Person, String> getPersonName = person -> person.name;
-        ToIntFunction<String> getNameLength = String::length;
-        IntConsumer printLength = System.out::println;
+        Predicate<Person> isFemale =
+                person -> FEMALE.equals(person.gender);
 
-        people.stream()
-                .map(getPersonName)
-                .mapToInt(getNameLength)
-                .forEach(printLength);
+        Predicate<Person> isPreferNotToSay =
+                person -> PREFER_NOT_TO_SAY.equals(person.gender);
+
+        boolean containsOnlyFemales = people.stream()
+                .allMatch(isFemale);
+
+        System.out.println(containsOnlyFemales);
+
+        boolean containsAnyFemales = people.stream()
+                .anyMatch(isFemale);
+
+        System.out.println(containsAnyFemales);
+
+        boolean notContainsAnyPreferNotToSay = people.stream()
+                .noneMatch(isPreferNotToSay);
+
+        System.out.println(notContainsAnyPreferNotToSay);
     }
 
     static class Person {
